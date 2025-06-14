@@ -5,9 +5,10 @@ from pandas import DataFrame
 
 
 # Goals:
-# 1. Which season has the highest success rate?
-# 2. Is there a correlation between total members, oxygen used, and success rate?
+# 1. Which season has the highest success rate? pie chart
+# 2. Is there a correlation between total members and success rate? scatterplot
 # 3. Which routes have favorable success/mortality rates?
+
 def total_seasonal_success(df:DataFrame) -> int:
     total = 0
 
@@ -36,10 +37,16 @@ def calculate_seasonal_success(file:DataFrame) -> str:
     autumn_df = respective_season_df(seasons_df, "Autumn")
     winter_df = respective_season_df(seasons_df, "Winter")
 
-    print(total_seasonal_success(summer_df))
-    print(total_seasonal_success(spring_df))
-    print(total_seasonal_success(autumn_df))
-    print(total_seasonal_success(winter_df))
+    data = {
+        "seasons" : ["summer", "spring", "autumn", "winter"],
+        "values" : [total_seasonal_success(summer_df), total_seasonal_success(spring_df), total_seasonal_success(autumn_df), total_seasonal_success(winter_df)]
+    }
+
+    graph_df = pandas.DataFrame(data)
+
+    graph_df.plot.pie(y="values", labels = graph_df["seasons"], autopct = "%1.1f%%", title="Pie Chart")
+
+    plt.show()
     # keep score of each successful ascent for each season with respective route
 
     return ""
@@ -51,6 +58,7 @@ def get_popular_routes(file: DataFrame, route: str) -> str:
     column_count = file[route].value_counts()
     most_common_route = file[route].value_counts().idxmax()
     return f"{most_common_route} ({column_count[most_common_route]} records)"
+
 
 
 def main() -> int:
